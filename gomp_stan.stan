@@ -7,7 +7,7 @@ data {
 }
 
 parameters {
-  real mu1;                             // intercept
+  array[N] real mu1;                    // intercepts per trial
   real beta;                            // coefficient
   real a_raw;                           // raw parameter for 'a'
 }
@@ -18,7 +18,7 @@ transformed parameters {
   vector[N] p;
 
   a = a_raw == 0 ? 0.0001 : a_raw;      // ensure 'a' is not exactly zero
-  b = exp(mu1 + var1 * beta);
+  b = exp(to_vector(mu1) + var1 * beta);
   p = 1 - exp(-b / a .* (exp(a * dt) - 1));
 }
 
@@ -40,5 +40,5 @@ generated quantities {
   for (i in 1:N) {
     r_new[i] = binomial_rng(n[i], p_new[i]);
   }
-  real rate = exp(mu1);
+  real rate = mean(exp(to_vector(mu1)));
 }

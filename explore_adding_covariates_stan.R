@@ -25,3 +25,4 @@ fit <- mdl$sample(data = list(r = r,
                                  var1 = myvar))
 fit
 
+
