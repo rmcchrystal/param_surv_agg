@@ -1,5 +1,5 @@
 library(tidyverse)
-library(rstan)
+library(cmdstanr)
 
 ## Used copilot to translate BUGS to Stan. Appears to recover values
 
@@ -17,9 +17,8 @@ ps_exp
 Ns <- runif(10, 100, 1000) %>% round()
 r <- rbinom(10, size = Ns, prob = ps)
 
-mdl <- rstan::stan_model("gomp_stan.stan")
-
-fit <- sampling(mdl, data = list(r = r, 
+mdl <- cmdstanr::cmdstan_model("gomp_stan.stan")
+fit <- mdl$sample(data = list(r = r, 
                                  dt = fu,
                                  n = Ns,
                                  N = length(Ns),
